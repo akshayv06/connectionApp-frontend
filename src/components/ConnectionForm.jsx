@@ -1,66 +1,57 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
 
-const ConnectionForm = () => {
-  const [senderEmail, setSenderEmail] = useState("");
-  const [receiverEmail, setReceiverEmail] = useState("");
-  const [message, setMessage] = useState("");
+function ConnectionForm() {
+  const [formData, setFormData] = useState({
+    email: '',
+    location: '',
+    gender: '',
+  });
+  const [results, setResults] = useState([]);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(10);
+
+  const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  try {
-    const response = await axios.post(
-      "https://connectionapplicationapi-production.up.railway.app/api/connection/send",
-      {
-        senderEmail,
-        receiverEmail,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    setMessage("Request sent successfully!");
-    console.log(response.data);
-  } catch (error) {
-    console.error("Error sending request:", error);
-    setMessage("Failed to send request.");
-  }
-};
+    e.preventDefault();
+    try {
+      const res = await fetch(`https://connectionapplicationapi-production.up.railway.app/api/connection/list?page=${page}&size=${size}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      setResults(data);
+    } catch (err) {
+      console.error(err);
+      alert('Error fetching connections');
+    }
+  };
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md">
-      <h2 className="text-xl font-bold mb-4">Send Connection Request</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          value={senderEmail}
-          onChange={(e) => setSenderEmail(e.target.value)}
-          placeholder="Sender Email"
-          required
-          className="w-full px-4 py-2 border rounded"
-        />
-        <input
-          type="email"
-          value={receiverEmail}
-          onChange={(e) => setReceiverEmail(e.target.value)}
-          placeholder="Receiver Email"
-          required
-          className="w-full px-4 py-2 border rounded"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Send Request
-        </button>
-        {message && <p className="text-sm mt-2">{message}</p>}
+    <div className="p-4 border rounded-lg shadow space-y-4 max-w-2xl">
+      <h2 className="text-xl font-semibold">Filtered Connection List</h2>
+      <form onSubmit={handleSubmit} className="space-y-2">
+        <input name="email" placeholder="Your Email" className="w-full border p-2" onChange={handleChange} />
+        <input name="location" placeholder="Location" className="w-full border p-2" onChange={handleChange} />
+        <select name="gender" className="w-full border p-2" onChange={handleChange}>
+          <option value="">Select Gender</option>
+          <option value="MALE">Male</option>
+          <option value="FEMALE">Female</option>
+          <option value="OTHER">Other</option>
+        </select>
+        <button type="submit" className="bg-purple-600 text-white px-4 py-2 rounded">Search</button>
       </form>
+
+      <ul className="space-y-2">
+        {results.map((user, idx) => (
+          <li key={idx} className="border p-2 rounded">
+            <strong>{user.name}</strong> - {user.email} - {user.location} - {user.gender}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
+}
 
 export default ConnectionForm;
