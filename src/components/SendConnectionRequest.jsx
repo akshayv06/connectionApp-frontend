@@ -1,92 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-function SendConnectionRequest({ apiType }) {
-  const [formData, setFormData] = useState({
-    senderEmail: '',
-    receiverEmail: ''
-  });
+function SendConnectionRequest() {
+  const [formData, setFormData] = useState({ senderEmail: '', receiverEmail: '' });
 
-  // Load saved emails from localStorage on component mount
-  useEffect(() => {
-    const savedSender = localStorage.getItem('senderEmail');
-    const savedReceiver = localStorage.getItem('receiverEmail');
-    setFormData((prev) => ({
-      ...prev,
-      senderEmail: savedSender || '',
-      receiverEmail: savedReceiver || '',
-    }));
-  }, []);
-
-  const saveEmailsToLocalStorage = () => {
-    localStorage.setItem('senderEmail', formData.senderEmail);
-    localStorage.setItem('receiverEmail', formData.receiverEmail);
-  };
-
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    saveEmailsToLocalStorage();
-
-    const apiUrl =
-      apiType === 'send'
-        ? 'https://connectionapplicationapi-production.up.railway.app/api/connection/send'
-        : 'https://connectionapplicationapi-production.up.railway.app/api/connection/connectWithDetails';
-
     try {
-      const res = await fetch(apiUrl, {
+      const res = await fetch('https://connectionapplicationapi-production.up.railway.app/api/connection/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          senderEmail: formData.senderEmail,
-          receiverEmail: formData.receiverEmail,
-        }),
+        body: JSON.stringify(formData),
       });
-
       const data = await res.json();
-      console.log('Response:', data);
-      alert('Request sent successfully!');
+      console.log(data);
     } catch (err) {
-      console.error('Error:', err);
-      alert('Something went wrong.');
+      console.error(err);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded-lg shadow space-y-4 max-w-md">
-      <h2 className="text-xl font-semibold">Connection Request ({apiType})</h2>
-
-      <input
-        type="email"
-        name="senderEmail"
-        value={formData.senderEmail}
-        onChange={handleChange}
-        placeholder="Sender Email"
-        required
-        className="w-full border p-2 rounded"
-      />
-      <input
-        type="email"
-        name="receiverEmail"
-        value={formData.receiverEmail}
-        onChange={handleChange}
-        placeholder="Receiver Email"
-        required
-        className="w-full border p-2 rounded"
-      />
-
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Send Request
-      </button>
-    </form>
+    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+      <h2 className="text-lg font-semibold mb-4 text-indigo-600">Send Connection Request</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          name="senderEmail"
+          value={formData.senderEmail}
+          onChange={handleChange}
+          placeholder="Sender Email"
+          className="w-full border border-gray-300 rounded-md p-2"
+        />
+        <input
+          name="receiverEmail"
+          value={formData.receiverEmail}
+          onChange={handleChange}
+          placeholder="Receiver Email"
+          className="w-full border border-gray-300 rounded-md p-2"
+        />
+        <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700">
+          Send Request
+        </button>
+      </form>
+    </div>
   );
 }
 
