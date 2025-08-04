@@ -13,21 +13,36 @@ function AcceptRequest() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      const data = await res.text();
-      alert(data);
+      const data = await res.json();
+      console.log(data);
     } catch (err) {
       console.error(err);
-      alert('Accept failed');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded-lg shadow space-y-4 max-w-md">
-      <h2 className="text-xl font-semibold">Accept Connection</h2>
-      <input name="senderEmail" placeholder="Sender Email" className="w-full border p-2" required onChange={handleChange} />
-      <input name="receiverEmail" placeholder="Receiver Email" className="w-full border p-2" required onChange={handleChange} />
-      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Accept</button>
-    </form>
+    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+      <h2 className="text-lg font-semibold mb-4 text-indigo-600">Accept Request</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          name="senderEmail"
+          value={formData.senderEmail}
+          onChange={handleChange}
+          placeholder="Sender Email"
+          className="w-full border border-gray-300 rounded-md p-2"
+        />
+        <input
+          name="receiverEmail"
+          value={formData.receiverEmail}
+          onChange={handleChange}
+          placeholder="Receiver Email"
+          className="w-full border border-gray-300 rounded-md p-2"
+        />
+        <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700">
+          Accept
+        </button>
+      </form>
+    </div>
   );
 }
 

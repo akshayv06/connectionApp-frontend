@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 
 function RegisterUser() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    location: '',
-    gender: '',
+    name: '', email: '', password: '', location: '', gender: '',
   });
 
   const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -28,19 +24,30 @@ function RegisterUser() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded-lg shadow space-y-4 max-w-md">
-      <h2 className="text-xl font-semibold">Register User</h2>
-      <input name="name" placeholder="Name" className="w-full border p-2" required onChange={handleChange} />
-      <input name="email" type="email" placeholder="Email" className="w-full border p-2" required onChange={handleChange} />
-      <input name="password" type="password" placeholder="Password" className="w-full border p-2" required onChange={handleChange} />
-      <input name="location" placeholder="Location" className="w-full border p-2" onChange={handleChange} />
-      <select name="gender" className="w-full border p-2" onChange={handleChange}>
+    <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-xl shadow-md border max-w-lg">
+      <h2 className="text-2xl font-bold text-indigo-700">📝 Register User</h2>
+
+      <input name="name" placeholder="Name" required onChange={handleChange}
+        className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+      <input name="email" type="email" placeholder="Email" required onChange={handleChange}
+        className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+      <input name="password" type="password" placeholder="Password" required onChange={handleChange}
+        className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+      <input name="location" placeholder="Location" onChange={handleChange}
+        className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+
+      <select name="gender" onChange={handleChange}
+        className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400">
         <option value="">Select Gender</option>
         <option value="MALE">Male</option>
         <option value="FEMALE">Female</option>
         <option value="OTHER">Other</option>
       </select>
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Register</button>
+
+      <button type="submit"
+        className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition">
+        Register
+      </button>
     </form>
   );
 }
