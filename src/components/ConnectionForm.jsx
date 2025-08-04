@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 function ConnectionForm() {
   const [formData, setFormData] = useState({ email: '', location: '', gender: '' });
@@ -8,7 +8,7 @@ function ConnectionForm() {
 
   const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await fetch(
         `https://connectionapplicationapi-production.up.railway.app/api/connection/list?page=${page}&size=${size}`,
@@ -24,7 +24,7 @@ function ConnectionForm() {
       console.error(err);
       alert('Error fetching connections');
     }
-  };
+  }, [formData, page, size]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ function ConnectionForm() {
     if (formData.email || formData.location || formData.gender) {
       fetchData();
     }
-  }, [page]);
+  }, [fetchData, formData.email, formData.location, formData.gender]);
 
   return (
     <div className="p-4 border rounded-lg shadow space-y-4 max-w-2xl mx-auto bg-white">

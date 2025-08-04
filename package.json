@@ -2,6 +2,7 @@
   "name": "connection-frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://akshayv06.github.io/connectionApp-frontend",
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^7.0.0",
     "@fortawesome/react-fontawesome": "^0.2.3",
