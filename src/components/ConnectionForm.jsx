@@ -7,11 +7,12 @@ function ConnectionForm() {
   const [size] = useState(10); // Keeping size fixed
 
   const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   const fetchData = useCallback(async () => {
     try {
       const res = await fetch(
-        `https://connectionapplicationapi-production.up.railway.app/api/connection/list?page=${page}&size=${size}`,
+  `${API_BASE_URL}/connection/list?page=${page}&size=${size}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

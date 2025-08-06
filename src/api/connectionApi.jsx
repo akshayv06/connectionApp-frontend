@@ -1,7 +1,8 @@
 // src/api/connectionApi.js
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080/api/connection';
+const BASE_URL =`${process.env.REACT_APP_API_URL}/connection`;
+
 
 export const sendFriendRequest = async (senderEmail, receiverEmail) => {
   return axios.post(`${BASE_URL}/send`, {
