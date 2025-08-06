@@ -7,7 +7,7 @@ function LoginUser({ onSuccess }) {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const API_BASE = `${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/connection`;
+  const API_BASE = `${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}`;
 
   const handleChange = (e) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
