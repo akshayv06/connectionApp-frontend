@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
-function RegisterUser({ onSuccess }) {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+function LoginUser({ onSuccess }) {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -9,7 +13,7 @@ function RegisterUser({ onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://connectionapplicationapi-production.up.railway.app/api/auth/register', {
+      const res = await fetch('https://connectionapplicationapi-production.up.railway.app/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -18,50 +22,45 @@ function RegisterUser({ onSuccess }) {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || 'Registration failed');
+        alert(data.message || 'Login failed');
         return;
       }
 
-      onSuccess?.('Registration successful! Please log in.');
+      localStorage.setItem('token', data.token);
+      login({ name: data.name, email: data.email });
+      onSuccess?.(`Welcome, ${data.name}!`);
+      navigate('/');
     } catch (err) {
       console.error(err);
-      alert('Something went wrong during registration.');
+      alert('Something went wrong. Please try again.');
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <input
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        placeholder="Name"
-        className="w-full border border-gray-300 rounded-md p-2"
-        required
-      />
-      <input
         name="email"
+        type="email"
         value={formData.email}
         onChange={handleChange}
         placeholder="Email"
-        type="email"
         className="w-full border border-gray-300 rounded-md p-2"
         required
       />
       <input
         name="password"
+        type="password"
         value={formData.password}
         onChange={handleChange}
         placeholder="Password"
-        type="password"
         className="w-full border border-gray-300 rounded-md p-2"
         required
       />
       <button type="submit" className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700">
-        Register
+        Login
       </button>
     </form>
   );
 }
 
-export default RegisterUser;
+export default LoginUser;

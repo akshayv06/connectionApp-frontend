@@ -1,28 +1,60 @@
-import React from 'react';
+// App.js
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import NavBar from './components/NavBar';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import AuthForm from './components/AuthForm';
 import Home from './pages/Home';
-import AcceptRequest from './components/AcceptRequest';
-import ConnectionForm from './components/ConnectionForm';
-import SendConnectionRequest from './components/SendConnectionRequest';
-import RejectRequest from './components/RejectRequest'; // 👈 Add this if exists
-import RegisterUser from './components/RegisterUser'; // 
+import Profile from './pages/Profile';
+import Connections from './pages/Connections';
+import PrivateRoute from './utils/PrivateRoute';
+import NavBar from './components/NavBar';
+
+function AppContent() {
+  const { user } = useAuth();
+
+  return (
+    <>
+      {user && <NavBar />} {/* ✅ NavBar only after login */}
+
+      <Routes>
+        <Route path="/auth" element={<AuthForm />} />
+        <Route path="/register" element={<AuthForm initialIsLogin={false} />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/connections"
+          element={
+            <PrivateRoute>
+              <Connections />
+            </PrivateRoute>
+          }
+        />
+        <Route path="*" element={<div className="p-10 text-center">404 - Page Not Found</div>} />
+      </Routes>
+    </>
+  );
+}
+
 function App() {
   return (
-    <Router>
-      <NavBar />
-      <div className="p-6">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<RegisterUser />} />
-          <Route path="/requests" element={<AcceptRequest />} />
-          <Route path="/requests/accept" element={<AcceptRequest />} />
-          <Route path="/requests/reject" element={<RejectRequest />} /> {/* 👈 Add this */}
-          <Route path="/connections" element={<ConnectionForm />} />
-          <Route path="/send-connection" element={<SendConnectionRequest />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
   );
 }
 

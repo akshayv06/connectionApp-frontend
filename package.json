@@ -1,8 +1,8 @@
 {
   "name": "connection-frontend",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
-  "homepage": "https://akshayv06.github.io/connectionApp-frontend",
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^7.0.0",
     "@fortawesome/react-fontawesome": "^0.2.3",
@@ -20,7 +20,7 @@
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "https://connectionapplicationapi-production.up.railway.app",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
