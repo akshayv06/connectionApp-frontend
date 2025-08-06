@@ -7,13 +7,15 @@ function LoginUser({ onSuccess }) {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const API_BASE = `${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/connection`;
+
   const handleChange = (e) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://connectionapplicationapi-production.up.railway.app/api/auth/login', {
+      const res = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

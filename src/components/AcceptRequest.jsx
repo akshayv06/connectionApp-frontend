@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const API_BASE_URL = `${process.env.REACT_APP_API_URL}/connection`;
 
 function AcceptRequest() {
   const [formData, setFormData] = useState({ senderEmail: '', receiverEmail: '' });
@@ -8,7 +9,7 @@ function AcceptRequest() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://connectionapplicationapi-production.up.railway.app/api/connection/accept', {
+      const res = await fetch(`${API_BASE_URL}/accept`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

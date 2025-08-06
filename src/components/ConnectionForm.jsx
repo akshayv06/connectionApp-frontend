@@ -7,7 +7,7 @@ function ConnectionForm() {
   const [size] = useState(10); // Keeping size fixed
 
   const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+const API_BASE_URL = `${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/connection`;
 
   const fetchData = useCallback(async () => {
     try {
